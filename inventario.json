@@ -1,0 +1,57 @@
+gcloud beta container \
+    --project \
+"prj-hypertech-qa" clusters create "banking-cluster" \
+    --region \
+"us-central1" \
+    --no-enable-basic-auth \
+    --cluster-version \
+"1.35.6-gke.1127000" \
+    --release-channel \
+"regular" \
+    --machine-type \
+"e2-standard-4" \
+    --image-type \
+"COS_CONTAINERD" \
+    --disk-type \
+"pd-standard" \
+    --disk-size \
+"100" \
+    --metadata \
+disable-legacy-endpoints=true \
+    --service-account \
+"default" \
+    --scopes \
+"https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/trace.append" \
+    --max-pods-per-node \
+"110" \
+    --num-nodes \
+"3" \
+    --logging=SYSTEM,WORKLOAD \
+    --monitoring=SYSTEM,STORAGE,POD,DEPLOYMENT,STATEFULSET,DAEMONSET,HPA,JOBSET,CADVISOR,KUBELET,DCGM \
+    --enable-ip-alias \
+    --network \
+"projects/vpc-host-nonprod-lu307-wl803/global/networks/vpc-nonprod-shared" \
+    --subnetwork \
+"projects/vpc-host-nonprod-lu307-wl803/regions/us-central1/subnetworks/subnet-non-prod-2" \
+    --no-enable-intra-node-visibility \
+    --default-max-pods-per-node \
+"110" \
+    --enable-ip-access \
+    --security-posture=standard \
+    --workload-vulnerability-scanning=disabled \
+    --no-enable-google-cloud-access \
+    --addons \
+HorizontalPodAutoscaling,HttpLoadBalancing,NodeLocalDNS,GcePersistentDiskCsiDriver \
+    --enable-autoupgrade \
+    --enable-autorepair \
+    --max-surge-upgrade \
+1 \
+    --max-unavailable-upgrade \
+0 \
+    --binauthz-evaluation-mode=DISABLED \
+    --enable-managed-prometheus \
+    --enable-shielded-nodes \
+    --shielded-integrity-monitoring \
+    --no-shielded-secure-boot \
+    --node-locations \
+"us-central1-f","us-central1-c","us-central1-a"
