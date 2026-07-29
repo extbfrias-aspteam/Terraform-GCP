@@ -1,0 +1,13 @@
+# ==============================================================================
+# PRODUCTION VARIABLE VALUES (EXAMPLE)
+# ==============================================================================
+
+project_id                    = "prj-hypertech-prod"
+region                        = "us-central1"
+vpc_network                   = "vpc-prod-shared"
+subnet                        = "subnet-prod-2"
+cluster_name                  = "banking-cluster-prod"
+machine_type                  = "e2-standard-4"
+pod_secondary_range_name      = "pods2"
+services_secondary_range_name = "services"
+master_ipv4_cidr_block        = "10.130.0.0/28" # Bloque sin solapamiento en la red de producción

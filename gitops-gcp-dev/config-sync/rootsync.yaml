@@ -1,0 +1,14 @@
+apiVersion: configsync.gke.io/v1beta1
+kind: RootSync
+metadata:
+  name: root-sync-dev
+  namespace: config-management-system
+spec:
+  sourceFormat: unstructured
+  git:
+    repo: "https://github.com/hypertech-org/gitops-gcp-dev.git"
+    branch: "main"
+    dir: "."
+    auth: "token"
+    secretRef:
+      name: git-creds-dev

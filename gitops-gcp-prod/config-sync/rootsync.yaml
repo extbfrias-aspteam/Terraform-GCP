@@ -1,0 +1,15 @@
+apiVersion: configsync.gke.io/v1beta1
+kind: RootSync
+metadata:
+  name: root-sync
+  namespace: config-management-system
+spec:
+  sourceFormat: unstructured
+  git:
+    repo: "https://github.com/hypertech-org/gitops-gcp-prod.git"
+    branch: "main"
+    dir: "."
+    # Opción recomendada para producción mediante autenticación segura basada en credenciales/tokens de Git
+    auth: "token"
+    secretRef:
+      name: git-creds # Nombre del secreto de K8s que aloja el token personal de acceso (PAT)

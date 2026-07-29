@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: banking-service
+  namespace: banking-prod
+  labels:
+    app: banking-service
+spec:
+  type: ClusterIP # Accedido internamente o expuesto mediante Ingress Controller de producción
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: banking-service

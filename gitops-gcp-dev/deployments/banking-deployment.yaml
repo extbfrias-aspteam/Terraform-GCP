@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-service
+  namespace: banking-dev
+  labels:
+    app: banking-service
+spec:
+  replicas: 1 # Ahorro de costos: En DEV solo requerimos 1 réplica activa (sin redundancia alta)
+  selector:
+    matchLabels:
+      app: banking-service
+  template:
+    metadata:
+      labels:
+        app: banking-service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+      - name: banking-api
+        image: us-central1-docker.pkg.dev/prj-hypertech-dev/banking-repo/banking-api:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        
+        # Sizing de recursos mínimo para el ambiente de desarrollo
+        resources:
+          limits:
+            cpu: "250m"      # Límite bajo para evitar acaparamiento
+            memory: 256Mi
+          requests:
+            cpu: "50m"       # Solicitud inicial sumamente baja (permite meter más pods por nodo)
+            memory: 128Mi
+            
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 20
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10

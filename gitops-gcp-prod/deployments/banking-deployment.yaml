@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-service
+  namespace: banking-prod
+  labels:
+    app: banking-service
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: banking-service
+  template:
+    metadata:
+      labels:
+        app: banking-service
+    spec:
+      # Robustez de seguridad: Restringe accesos a nivel de sistema operativo del contenedor
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+      - name: banking-api
+        image: us-central1-docker.pkg.dev/prj-hypertech-prod/banking-repo/banking-api:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        
+        # Práctica Recomendada de Producción: Límites y requests para evitar estrangulamiento de nodos
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+            
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          
+        # Probes de ciclo de vida para autorreparación inteligente
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
