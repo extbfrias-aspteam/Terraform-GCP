@@ -12,10 +12,10 @@ terraform {
   }
   
   # Backend remoto en el bucket de desarrollo
-  backend "gcs" {
-    bucket = "prj-hypertech-dev-tfstate"
-    prefix = "gke/development-cluster"
-  }
+  #backend "gcs" {
+  #  bucket = "prj-hypertech-dev-tfstate"
+  #  prefix = "gke/development-cluster"
+  #}
 }
 
 provider "google" {
